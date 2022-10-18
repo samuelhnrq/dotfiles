@@ -1,16 +1,13 @@
-# Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt extendedglob nomatch notify
 bindkey -e
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
 zstyle :compinstall filename '{{ .chezmoi.homeDir }}/.zshrc'
-
 autoload -Uz compinit
 compinit
-# End of lines added by compinstall
+
+export VOLTA_HOME="$HOME/.volta"
 
 {{ if eq .chezmoi.os "linux" -}}
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
@@ -22,6 +19,10 @@ export GIT_SSH_COMMAND="ssh.exe"
 
 {{ else if eq .chezmoi.os "darwin" -}}
 # MACOS Section
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="/opt/homebrew/opt/python3/libexec/bin:$PATH"
 
 {{ end -}}
+
+export PATH="$VOLTA_HOME/bin:$HOME/.local/bin:$PATH"
 
