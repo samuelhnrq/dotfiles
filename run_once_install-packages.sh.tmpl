@@ -1,0 +1,46 @@
+#!/bin/zsh
+
+echo "=====> SAMOSAARA DOTFILES <====="
+echo Setting up environment!
+
+# Setup ZSH Shell
+if [[ $SHELL != "/bin/zsh" ]]; then
+    echo "Shell not set, setting to zsh"
+    sudo chsh -s /bin/zsh $(whoami)
+fi
+
+echo "Checking for missing packages to install..."
+
+{{ if eq .chezmoi.os "linux" -}}
+if ! which yay > /dev/null; then
+    echo "Yay itself is missing -- starting install"
+    cd $HOME
+    mkdir -p code
+    sudo pacman -Sy --noconfirm --needed base-devel --ignore fakeroot zsh git
+    cd code
+    git clone https://aur.archlinux.org/yay-bin.git
+    cd yay-bin
+    makepkg -si --noconfirm
+fi
+
+function yay_install() {
+    echo "[$@] is/are missing, using yay to install it/them"
+    yay -S --noconfirm --needed --nodiffmenu --removemake --answerclean=n \
+        $@
+    echo "[$@] instalation finished!"
+    echo "===================================================================="
+}
+
+if ! which volta > /dev/null; then
+    yay_install volta-bin
+fi
+
+{{ else if eq .chezmoi.os "darwin" -}}
+brew install ripgrep
+
+{{ end -}}
+
+echo "All packages ready!"
+
+# vim: set syntax=zsh:
+
