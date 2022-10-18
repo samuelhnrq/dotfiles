@@ -7,7 +7,27 @@ zstyle :compinstall filename '{{ .chezmoi.homeDir }}/.zshrc'
 autoload -Uz compinit
 compinit
 
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 export VOLTA_HOME="$HOME/.volta"
+
+# ZPLUG START
+source ~/.zplug/init.zsh
+
+zplug romkatv/powerlevel10k, as:theme, depth:1
+
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo
+        zplug install
+    fi
+fi
+
+zplug load
+# ZPLUG END
 
 {{ if eq .chezmoi.os "linux" -}}
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
@@ -26,4 +46,6 @@ export PATH="/opt/homebrew/opt/python3/libexec/bin:$PATH"
 {{ end -}}
 
 export PATH="$VOLTA_HOME/bin:$HOME/.local/bin:$PATH"
+
+# vim: set syntax=zsh:
 
