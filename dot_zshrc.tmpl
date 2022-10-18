@@ -7,11 +7,14 @@ zstyle :compinstall filename '{{ .chezmoi.homeDir }}/.zshrc'
 autoload -Uz compinit
 compinit
 
+export EDITOR=vim
+export VOLTA_HOME="$HOME/.volta"
+
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-export VOLTA_HOME="$HOME/.volta"
 
 # ZPLUG START
 source ~/.zplug/init.zsh
@@ -36,7 +39,6 @@ export GIT_SSH_COMMAND="ssh.exe"
 
 {{   end }}
 # Generic LINUX section
-export EDITOR=vim
 
 {{ else if eq .chezmoi.os "darwin" -}}
 # MACOS Section
