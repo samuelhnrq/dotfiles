@@ -1,0 +1,8 @@
+[credential]
+	helper = /mnt/c/Program\\ Files/Git/mingw64/libexec/git-core/git-credential-wincred.exe
+[user]
+	name = Samuel da Silva
+	email = samosaara@gmail.com
+	signingkey = samosaara@gmail.com
+[commit]
+	gpgsign = true
