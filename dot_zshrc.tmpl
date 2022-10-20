@@ -3,12 +3,10 @@ HISTSIZE=1000
 SAVEHIST=1000
 setopt extendedglob nomatch notify
 bindkey -e
-zstyle :compinstall filename '{{ .chezmoi.homeDir }}/.zshrc'
-autoload -Uz compinit
-compinit
 
 export EDITOR=vim
 export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$HOME/.local/bin:$PATH"
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -32,6 +30,7 @@ fi
 zplug load
 # ZPLUG END
 
+
 {{ if eq .chezmoi.os "linux" -}}
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 # WSL Section
@@ -43,11 +42,20 @@ export GIT_SSH_COMMAND="ssh.exe"
 {{ else if eq .chezmoi.os "darwin" -}}
 # MACOS Section
 eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(chezmoi completion zsh)"
+export FPATH="$(brew --prefix)/share/zsh-completions:$FPATH"
 export PATH="/opt/homebrew/opt/python3/libexec/bin:$PATH"
+export ZSH_DISABLE_COMPFIX="true"
 
 {{ end -}}
 
-export PATH="$VOLTA_HOME/bin:$HOME/.local/bin:$PATH"
+if which pyenv > /dev/null; then
+    eval "$(pyenv init -)"
+fi
+
+zstyle :compinstall filename '{{ .chezmoi.homeDir }}/.zshrc'
+autoload -Uz compinit
+compinit
 
 # vim: set syntax=zsh:
 
