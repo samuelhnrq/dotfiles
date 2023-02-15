@@ -1,29 +1,24 @@
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+{{ if eq .chezmoi.os "darwin" -}}
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+{{ end }}
+echo -------- NEW STARTUP ----------- >> ~/init.txt
+echo started at $(date +"%T.%3N") >> ~/init.txt
 
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
+echo zplug start $(date +"%T.%3N") >> ~/init.txt
 # ZPLUG START
 source ~/.zplug/init.zsh
 
-zplug "romkatv/powerlevel10k", as:theme, depth:1
+# zplug "romkatv/powerlevel10k", as:theme, depth:1
 zplug "modules/environment", from:prezto
 zplug "modules/editor", from:prezto
 zplug "modules/history", from:prezto
 zplug "modules/completion", from:prezto
-
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo
-        zplug install
-    fi
-fi
+# zplug "spaceship-prompt/spaceship-prompt", from:github, use:spaceship.zsh, as:theme
 
 zplug load
 # ZPLUG END
 
+echo zplug ending $(date +"%T.%3N") >> ~/init.txt
 # Some basic environment
 
 export EDITOR=vim
@@ -41,16 +36,22 @@ export GPG_TTY=$TTY
 
 {{ else if eq .chezmoi.os "darwin" -}}
 # MACOS Section
+echo brew start $(date +"%T.%3N") >> ~/init.txt
 eval "$(/opt/homebrew/bin/brew shellenv)"
+echo brew ending $(date +"%T.%3N") >> ~/init.txt
 eval "$(chezmoi completion zsh)"
-export PATH="/opt/homebrew/opt/python3/libexec/bin:$PATH"
-export ZSH_DISABLE_COMPFIX="true"
+# export ZSH_DISABLE_COMPFIX="true"
 
 {{ end -}}
 
 if which pyenv > /dev/null; then
-    eval "$(pyenv init -)"
+    alias check_all="printf 'pylint\\nblack\\nmypy' | parallel poetry run {} src"
+    echo pyenv start $(date +"%T.%3N") >> ~/init.txt
+    export PYENV_ROOT="$HOME/.pyenv"
+    eval "$(pyenv init --path)"
+    echo pyenv ending $(date +"%T.%3N") >> ~/init.txt
 fi
 
 # vim: set syntax=zsh:
 
+echo ended at $(date +"%T.%3N") >> ~/init.txt
