@@ -1,24 +1,14 @@
 {{ if eq .chezmoi.os "darwin" -}}
-export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/bin:$PATH"
 {{ end }}
 echo -------- NEW STARTUP ----------- >> ~/init.txt
 echo started at $(date +"%T.%3N") >> ~/init.txt
 
-echo zplug start $(date +"%T.%3N") >> ~/init.txt
-# ZPLUG START
-source ~/.zplug/init.zsh
+echo sheldon start $(date +"%T.%3N") >> ~/init.txt
 
-# zplug "romkatv/powerlevel10k", as:theme, depth:1
-zplug "modules/environment", from:prezto
-zplug "modules/editor", from:prezto
-zplug "modules/history", from:prezto
-zplug "modules/completion", from:prezto
-# zplug "spaceship-prompt/spaceship-prompt", from:github, use:spaceship.zsh, as:theme
+eval "$(sheldon source)"
 
-zplug load
-# ZPLUG END
-
-echo zplug ending $(date +"%T.%3N") >> ~/init.txt
+echo sheldon ending $(date +"%T.%3N") >> ~/init.txt
 # Some basic environment
 
 export EDITOR=vim
@@ -52,6 +42,7 @@ if which pyenv > /dev/null; then
     echo pyenv ending $(date +"%T.%3N") >> ~/init.txt
 fi
 
+echo ended at $(date +"%T.%3N") >> ~/init.txt
+typeset -U path
 # vim: set syntax=zsh:
 
-echo ended at $(date +"%T.%3N") >> ~/init.txt

@@ -1,0 +1,17 @@
+[plugins.base16]
+github = "chriskempson/base16-shell"
+
+
+[plugins.prezto]
+github = "sorin-ionescu/prezto"
+use = [
+    "modules/environment/*.zsh",
+    "modules/editor/*.zsh",
+    "modules/history/*.zsh",
+    "modules/completion/*.zsh",
+]
+
+[plugins.spaceship]
+github = "spaceship-prompt/spaceship-prompt"
+tag = "v4.13.1"
+
